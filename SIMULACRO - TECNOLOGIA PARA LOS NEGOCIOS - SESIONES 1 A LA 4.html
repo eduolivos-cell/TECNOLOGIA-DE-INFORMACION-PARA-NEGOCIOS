@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulacro · Tecnología de la Información para Negocios</title>
+<style>
+:root{
+  --bg:#04040a;
+  --cyan:#00f0ff;
+  --magenta:#ff2ec4;
+  --yellow:#ffe600;
+  --green:#39ff14;
+  --red:#ff3939;
+  --glass:rgba(255,255,255,0.06);
+  --glass-brd:rgba(255,255,255,0.12);
+  --text:#e8f0ff;
+  --muted:#9aa3b8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Segoe UI',Tahoma,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  position:relative;
+  padding-bottom:100px;
+}
+.bg-fx{
+  position:fixed;inset:0;z-index:-2;
+  background:
+    radial-gradient(ellipse at 20% 10%,rgba(0,240,255,0.15),transparent 50%),
+    radial-gradient(ellipse at 80% 90%,rgba(255,46,196,0.12),transparent 50%),
+    radial-gradient(ellipse at 50% 50%,rgba(57,255,20,0.06),transparent 60%),
+    var(--bg);
+  animation:glow 12s ease-in-out infinite alternate;
+}
+@keyframes glow{0%{filter:hue-rotate(0deg) brightness(1)}100%{filter:hue-rotate(40deg) brightness(1.15)}}
+.particles{position:fixed;inset:0;z-index:-1;pointer-events:none}
+
+header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;gap:1rem;
+  padding:0.7rem 1.5rem;
+  background:rgba(4,4,10,0.9);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--glass-brd);
+}
+.logo-chip{
+  width:44px;height:44px;border-radius:12px;
+  background:#fff;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;flex-shrink:0;
+  box-shadow:0 0 20px rgba(0,240,255,0.3);
+}
+.logo-chip svg{width:100%;height:100%;object-fit:contain}
+.brand{
+  font-size:0.95rem;font-weight:700;letter-spacing:0.5px;
+  background:linear-gradient(90deg,var(--cyan),var(--magenta),var(--yellow));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  flex:1;
+}
+.chips{display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:flex-end}
+.chip{
+  padding:0.35rem 0.75rem;border-radius:999px;
+  background:var(--glass);border:1px solid var(--glass-brd);
+  font-size:0.75rem;font-weight:600;color:var(--text);white-space:nowrap;
+}
+.chip.cyan{border-color:var(--cyan);box-shadow:0 0 10px rgba(0,240,255,0.3)}
+.chip.mag{border-color:var(--magenta);box-shadow:0 0 10px rgba(255,46,196,0.3)}
+.chip.warn{border-color:var(--yellow);color:var(--yellow)}
+
+main{
+  padding:90px 1.5rem 40px;
+  max-width:850px;margin:0 auto;
+}
+
+.card{
+  background:var(--glass);border:1px solid var(--glass-brd);
+  backdrop-filter:blur(10px);border-radius:18px;
+  padding:2rem;margin-bottom:1.5rem;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+}
+.card.glow-cyan{box-shadow:0 0 30px rgba(0,240,255,0.1),inset 0 0 20px rgba(0,240,255,0.03)}
+
+h2{font-size:1.6rem;margin-bottom:1rem;color:var(--cyan)}
+h3{font-size:1.1rem;margin-bottom:0.8rem;color:var(--magenta)}
+p{line-height:1.65;color:#d5ddf0;margin-bottom:0.8rem}
+
+.form-group{margin-bottom:1.2rem}
+.form-group label{display:block;font-size:0.85rem;color:var(--muted);margin-bottom:0.4rem;font-weight:600}
+.form-group input{
+  width:100%;padding:0.9rem 1rem;border-radius:10px;
+  background:rgba(0,0,0,0.3);border:1px solid var(--glass-brd);
+  color:var(--text);font-family:inherit;font-size:1rem;
+  transition:border-color .2s;
+}
+.form-group input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 15px rgba(0,240,255,0.2)}
+
+.rules{
+  background:rgba(255,230,0,0.05);border-left:3px solid var(--yellow);
+  padding:1rem 1.2rem;border-radius:0 10px 10px 0;margin:1.5rem 0;
+  font-size:0.9rem;color:#ffeaa7;
+}
+.rules ul{list-style:none;padding-left:0}
+.rules li{padding:0.3rem 0;padding-left:1.5rem;position:relative}
+.rules li::before{content:"⚠";position:absolute;left:0}
+
+.btn{
+  padding:1rem 2rem;border-radius:12px;border:none;cursor:pointer;
+  font-family:inherit;font-weight:700;font-size:1.05rem;
+  background:linear-gradient(90deg,var(--cyan),var(--magenta));
+  color:#000;transition:transform .2s,box-shadow .2s;
+  box-shadow:0 8px 24px rgba(0,240,255,0.3);width:100%;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(255,46,196,0.4)}
+.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.btn.green{background:linear-gradient(90deg,var(--green),var(--cyan));box-shadow:0 8px 24px rgba(57,255,20,0.3)}
+.btn.sm{padding:0.7rem 1.2rem;font-size:0.9rem;width:auto}
+
+#quiz-screen{display:none}
+.timer-bar{
+  position:sticky;top:75px;z-index:90;
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:1.5rem;padding:0.8rem 1.2rem;
+  background:rgba(4,4,10,0.85);backdrop-filter:blur(16px);
+  border:1px solid var(--glass-brd);border-radius:14px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.5);
+}
+.timer-display{
+  font-size:1.6rem;font-weight:800;font-variant-numeric:tabular-nums;
+  color:var(--cyan);transition:color .3s;
+}
+.timer-display.warn{color:var(--yellow);text-shadow:0 0 15px var(--yellow)}
+.timer-display.danger{color:var(--red);text-shadow:0 0 15px var(--red);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+
+.q-block{
+  margin-bottom:2rem;padding-bottom:1.5rem;
+  border-bottom:1px solid var(--glass-brd);
+}
+.q-block:last-of-type{border-bottom:none}
+.q-number{
+  display:inline-block;padding:0.2rem 0.6rem;border-radius:6px;
+  background:var(--yellow);color:#000;font-weight:700;font-size:0.8rem;
+  margin-bottom:0.6rem;
+}
+.q-text{font-size:1.05rem;font-weight:600;line-height:1.6;margin-bottom:1.2rem;color:#fff}
+.options{display:flex;flex-direction:column;gap:0.7rem}
+.opt{
+  padding:0.9rem 1rem;border-radius:10px;cursor:pointer;
+  background:rgba(0,0,0,0.2);border:1px solid var(--glass-brd);
+  transition:all .2s;display:flex;align-items:flex-start;gap:0.8rem;
+}
+.opt:hover{border-color:var(--cyan);background:rgba(0,240,255,0.05)}
+.opt.selected{border-color:var(--magenta);background:rgba(255,46,196,0.1);box-shadow:0 0 15px rgba(255,46,196,0.15)}
+.opt-letter{
+  width:26px;height:26px;border-radius:50%;
+  background:var(--glass);border:1px solid var(--glass-brd);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:0.8rem;flex-shrink:0;color:var(--cyan);
+}
+.opt.selected .opt-letter{background:var(--magenta);color:#000;border-color:var(--magenta)}
+.opt-text{font-size:0.95rem;line-height:1.5;color:#d5ddf0}
+
+#result-screen{display:none;text-align:center}
+.score-big{
+  font-size:3.5rem;font-weight:800;
+  background:linear-gradient(90deg,var(--cyan),var(--magenta));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  margin:1rem 0;
+}
+.status-badge{
+  display:inline-block;padding:0.5rem 1.5rem;border-radius:999px;
+  font-weight:700;font-size:1.1rem;margin-bottom:1rem;
+}
+.status-badge.aprobado{background:rgba(57,255,20,0.2);color:var(--green);border:1px solid var(--green)}
+.status-badge.desaprobado{background:rgba(255,57,57,0.2);color:var(--red);border:1px solid var(--red)}
+
+.review-list{text-align:left;margin:2rem 0}
+.review-item{
+  padding:1rem;border-radius:10px;margin-bottom:0.8rem;
+  background:rgba(0,0,0,0.2);border-left:4px solid var(--muted);
+}
+.review-item.ok{border-left-color:var(--green)}
+.review-item.err{border-left-color:var(--red)}
+.review-q{font-weight:600;font-size:0.9rem;margin-bottom:0.5rem;color:#fff}
+.review-ans{font-size:0.85rem;color:var(--muted)}
+.review-ans strong{color:var(--text)}
+.review-ans .correct{color:var(--green)}
+.review-ans .wrong{color:var(--red)}
+
+.feedback-module{
+  margin-top:2rem;padding:1.5rem;
+  background:rgba(0,240,255,0.05);border:1px solid var(--cyan);
+  border-radius:14px;text-align:left;
+}
+.feedback-module h3{color:var(--cyan);margin-bottom:0.5rem}
+.feedback-module p{font-size:0.9rem;color:var(--muted);margin-bottom:1rem}
+.feedback-module input{
+  width:100%;padding:0.8rem;border-radius:8px;
+  background:rgba(0,0,0,0.3);border:1px solid var(--glass-brd);
+  color:var(--text);margin-bottom:1rem;font-family:inherit;
+}
+.feedback-module input:focus{outline:none;border-color:var(--cyan)}
+
+.hidden{display:none !important}
+
+.modal-overlay{
+  position:fixed;inset:0;z-index:1000;
+  background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);
+  display:none;align-items:center;justify-content:center;
+}
+.modal-overlay.show{display:flex}
+.modal-box{
+  background:var(--bg);border:2px solid var(--magenta);
+  border-radius:18px;padding:2rem;max-width:500px;width:90%;
+  box-shadow:0 0 50px rgba(255,46,196,0.4);
+  animation:modalIn 0.3s ease;
+}
+@keyframes modalIn{from{transform:scale(0.8);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-box h3{color:var(--yellow);margin-bottom:1rem;font-size:1.3rem}
+.modal-box p{margin-bottom:1.5rem;line-height:1.6}
+.modal-buttons{display:flex;gap:1rem;justify-content:flex-end}
+.modal-buttons .btn{width:auto;padding:0.7rem 1.5rem}
+.modal-buttons .btn.cancel{background:var(--glass);color:var(--text);border:1px solid var(--glass-brd)}
+
+.simulacro-banner{
+  background:linear-gradient(90deg,rgba(255,230,0,0.15),rgba(255,46,196,0.15));
+  border:2px solid var(--yellow);
+  border-radius:14px;
+  padding:1rem 1.5rem;
+  margin-bottom:1.5rem;
+  text-align:center;
+  font-weight:700;
+  color:var(--yellow);
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{box-shadow:0 0 20px rgba(255,230,0,0.3)}50%{box-shadow:0 0 40px rgba(255,230,0,0.6)}}
+</style>
+</head>
+<body>
+
+<div class="bg-fx"></div>
+<canvas class="particles" id="particles"></canvas>
+
+<header>
+  <div class="logo-chip">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#00f0ff"/>
+          <stop offset="1" stop-color="#ff2ec4"/>
+        </linearGradient>
+      </defs>
+      <circle cx="50" cy="50" r="44" fill="url(#lg)"/>
+      <text x="50" y="58" text-anchor="middle" font-family="Segoe UI" font-weight="800" font-size="14" fill="#fff">UCSUR</text>
+    </svg>
+  </div>
+  <div class="brand">🎯 SIMULACRO · TECNOLOGÍA DE LA INFORMACIÓN PARA NEGOCIOS · SESIONES 1-4</div>
+  <div class="chips">
+    <span class="chip cyan">10 minutos</span>
+    <span class="chip mag">1 Intento</span>
+    <span class="chip warn">Eduardo Olivos</span>
+  </div>
+</header>
+
+<main>
+  <div id="start-screen" class="card glow-cyan">
+    <div class="simulacro-banner"> EXAMEN DE SIMULACRO · PREPARACIÓN PARA LA EVALUACIÓN FINAL</div>
+    <h2>Identificación del Estudiante</h2>
+    <p>Completa tus datos correctamente. Este simulacro tiene <strong>1 solo intento</strong> y un tiempo límite de <strong>10 minutos</strong>. Las 10 preguntas estarán visibles para que puedas revisarlas.</p>
+    
+    <div class="form-group">
+      <label>Primer Apellido</label>
+      <input type="text" id="apellido1" placeholder="Ej. García" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label>Segundo Apellido</label>
+      <input type="text" id="apellido2" placeholder="Ej. López" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label>Nombres</label>
+      <input type="text" id="nombres" placeholder="Ej. Juan Carlos" autocomplete="off">
+    </div>
+
+    <div class="rules">
+      <strong>Reglas del simulacro:</strong>
+      <ul>
+        <li>Tienes 10 minutos exactos. El sistema se enviará automáticamente al llegar a 00:00.</li>
+        <li>Solo se permite 1 intento por alumno. Si ya lo realizaste, el sistema lo bloqueará.</li>
+        <li><strong>Anti-trampa:</strong> Si cambias de pestaña, minimizas el navegador o sales de la pantalla, se registrará una incidencia de "CAMBIO DE PANTALLA" y se enviará automáticamente.</li>
+        <li>No actualices la página (F5) o perderás tu progreso.</li>
+      </ul>
+    </div>
+
+    <button class="btn" id="btn-start" onclick="startQuiz()">🚀 Iniciar Simulacro</button>
+    <p id="start-error" style="color:var(--red);text-align:center;margin-top:1rem;font-weight:600;display:none;"></p>
+  </div>
+
+  <div id="quiz-screen">
+    <div class="timer-bar">
+      <div style="font-size:0.9rem;color:var(--muted);font-weight:600"> Simulacro · Revisa tus respuestas</div>
+      <div class="timer-display" id="timer">10:00</div>
+    </div>
+
+    <div class="card glow-cyan" id="questions-container"></div>
+
+    <button class="btn green" id="btn-submit" onclick="showConfirmModal()" style="margin-top:1rem">✅ Entregar Simulacro</button>
+  </div>
+
+  <div id="result-screen" class="card glow-cyan">
+    <div class="simulacro-banner"> RESULTADOS DEL SIMULACRO</div>
+    <h2>Resultados</h2>
+    <div class="score-big" id="res-score">0 / 10</div>
+    <div id="res-percent" style="font-size:1.2rem;color:var(--muted);margin-bottom:0.5rem">0%</div>
+    <div class="status-badge" id="res-status">ESTADO</div>
+    <div id="res-incidencia" style="color:var(--yellow);font-weight:600;margin-bottom:1rem;display:none">⚠ Incidencia: CAMBIO DE PANTALLA DETECTADO</div>
+    
+    <p style="color:var(--muted);font-size:0.9rem">Tiempo empleado: <span id="res-time" style="color:var(--text);font-weight:600"></span></p>
+
+    <div class="review-list" id="review-list"></div>
+
+    <div class="feedback-module">
+      <h3> Solicitar Feedback Detallado</h3>
+      <p>Ingresa tu correo personal para recibir el desglose completo de tus respuestas.</p>
+      <input type="email" id="feedback-email" placeholder="tucorreo@ejemplo.com">
+      <button class="btn sm green" onclick="sendFeedback()">Enviar Feedback a mi correo</button>
+      <p id="feedback-msg" style="margin-top:0.8rem;font-size:0.85rem;display:none"></p>
+    </div>
+  </div>
+</main>
+
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal-box">
+    <h3>⚠ Confirmar entrega</h3>
+    <p id="modal-message">¿Estás seguro de entregar el simulacro?</p>
+    <div class="modal-buttons">
+      <button class="btn cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn green" onclick="confirmAndSubmit()">Sí, entregar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwEc5wCyoVpb9743P4qdCOYatcLje0s94gx1be0DQEEX9CgXQx3HCNHldLtVmjreZlBUQ/exec";
+const KEY_BASE = "TIN_SIM_S1S4_";
+const SESSION_TAG = "TIN-SIM-S1S4";
+const CURSO = "Tecnología de la Información para Negocios";
+const TOTAL_TIME = 600;
+
+// ============================================================
+// PREGUNTAS DE SIMULACRO (diferentes a la evaluación final)
+// Distribución correcta: C, B, A, D, B, C, A, D, C, B
+// ============================================================
+const questions = [
+  {
+    q: "Interbank utiliza sistemas de información para ofrecer banca móvil, transferencias inmediatas y atención 24/7. Si un analista afirma que 'el éxito de Interbank se debe únicamente a su software bancario', esta afirmación es incorrecta porque:",
+    options: [
+      "El software bancario es el único componente que realmente importa en la banca moderna, los demás son secundarios.",
+      "Los datos de los clientes son el componente más importante, mientras que las personas y procesos son irrelevantes.",
+      "Un sistema de información requiere la integración equilibrada de personas, procesos, tecnología y datos para generar información útil.",
+      "La tecnología siempre reemplaza la necesidad de procesos documentados y personal capacitado en el sector financiero."
+    ],
+    correct: 2
+  },
+  {
+    q: "Amazon transforma el retail con logística inteligente, recomendaciones por IA, ventas globales y entrega rápida. Si una empresa peruana quisiera replicar este modelo, el primer aspecto estratégico que debería priorizar es:",
+    options: [
+      "Comprar el mismo software que usa Amazon, ya que la tecnología por sí sola garantiza el éxito operativo.",
+      "Integrar personas, procesos, tecnología y datos para automatizar operaciones y personalizar la experiencia del cliente.",
+      "Contratar más personal administrativo para procesar manualmente los pedidos y reducir la dependencia tecnológica.",
+      "Eliminar completamente el comercio físico y operar exclusivamente en línea para reducir costos operativos."
+    ],
+    correct: 1
+  },
+  {
+    q: "Una startup tecnológica tiene un equipo brillante y el mejor software del mercado, pero sus procesos internos son caóticos y no existen flujos de trabajo definidos. Según el modelo de dimensiones de los sistemas de información, el resultado más probable es:",
+    options: [
+      "El sistema fracasará porque la dimensión organizacional (procesos) es tan crítica como la humana y la tecnológica.",
+      "El sistema tendrá éxito porque la tecnología avanzada compensa automáticamente las deficiencias en los procesos.",
+      "El sistema funcionará perfectamente siempre que las personas estén altamente motivadas y capacitadas.",
+      "El sistema operará correctamente porque las startups no necesitan procesos formales para ser competitivas."
+    ],
+    correct: 0
+  },
+  {
+    q: "En la era del Big Data, una empresa de retail descubre que el 70% de sus ventas proviene de un nicho específico: mujeres de 25-40 años que compran productos ecológicos los fines de semana. La decisión estratégica más efectiva basada en este dato sería:",
+    options: [
+      "Enviar la misma campaña publicitaria a todos los clientes para mantener la coherencia de marca.",
+      "Eliminar los productos ecológicos del inventario porque representan un nicho muy pequeño.",
+      "Invertir todo el presupuesto en publicidad tradicional en televisión para alcanzar mayor alcance.",
+      "Diseñar campañas personalizadas y ofertas específicas para ese nicho, optimizando el retorno de inversión."
+    ],
+    correct: 3
+  },
+  {
+    q: "Michael Porter identificó que las actividades de apoyo (Recursos Humanos, Tecnología, Compras, Infraestructura) respaldan a las actividades primarias. Si una empresa tiene excelentes actividades primarias pero deficientes actividades de apoyo, el resultado esperado es:",
+    options: [
+      "La empresa operará eficientemente porque las actividades primarias son las únicas que generan valor directo al cliente.",
+      "Toda la cadena de valor se verá comprometida, ya que las actividades de apoyo son fundamentales para sostener las operaciones.",
+      "La empresa podrá externalizar todas las actividades de apoyo sin afectar su competitividad en el mercado.",
+      "Las actividades primarias compensarán automáticamente las deficiencias de las actividades de apoyo."
+    ],
+    correct: 1
+  },
+  {
+    q: "Una empresa manufacturera decide implementar un sistema CRM para ventas, un ERP para finanzas y un sistema de inventarios para almacén, pero no los conecta entre sí. Después de seis meses, aparecen problemas de duplicidad de datos y demoras en la facturación. La causa raíz del problema es:",
+    options: [
+      "Los sistemas elegidos no son los adecuados para el tamaño de la empresa y deben reemplazarse por uno solo.",
+      "El personal no está suficientemente capacitado para operar múltiples sistemas simultáneamente.",
+      "La falta de integración entre los sistemas genera silos de información, errores y duplicidad de esfuerzos.",
+      "La empresa debería haber mantenido sus procesos manuales en Excel para evitar la complejidad tecnológica."
+    ],
+    correct: 2
+  },
+  {
+    q: "The Home Depot modernizó sus operaciones mediante nuevos sistemas para mejorar inventarios, atención al cliente y logística. Este caso demuestra que la transformación digital exitosa requiere:",
+    options: [
+      "Equilibrio entre tecnología, personas capacitadas y procesos rediseñados para responder mejor a la demanda.",
+      "Únicamente la adquisición de tecnología de última generación sin modificar los procesos existentes.",
+      "Reemplazar completamente al personal antiguo por empleados más jóvenes familiarizados con la tecnología.",
+      "Limitar la digitalización al área de ventas, ya que es la única que impacta directamente al cliente final."
+    ],
+    correct: 0
+  },
+  {
+    q: "Una empresa peruana de cosméticos naturales quiere competir con marcas globales utilizando Big Data. Su analista identifica que los consumidores peruanos prefieren productos con ingredientes locales y empaques biodegradables. La estrategia competitiva más efectiva sería:",
+    options: [
+      "Copiar exactamente las estrategias de marketing de las marcas globales líderes para asegurar resultados similares.",
+      "Enviar comunicaciones masivas idénticas a todos los clientes para maximizar el alcance y reconocimiento de marca.",
+      "Invertir el presupuesto disponible en publicidad tradicional en medios masivos para competir directamente.",
+      "Diseñar productos y campañas específicas basadas en las preferencias locales identificadas, diferenciándose de la competencia global."
+    ],
+    correct: 3
+  },
+  {
+    q: "En el modelo de la Cadena de Valor de Porter, las actividades primarias incluyen Logística interna, Operaciones, Logística externa, Marketing y ventas, y Servicio. Si una empresa tiene deficiencias en 'Logística externa', el impacto más directo sería:",
+    options: [
+      "La empresa no podrá contratar personal calificado para sus operaciones internas.",
+      "Los productos no llegarán eficientemente al cliente final, afectando la experiencia de compra y la satisfacción.",
+      "La empresa perderá la capacidad de desarrollar nueva tecnología para innovar sus productos.",
+      "Los procesos de compras de materia prima se verán interrumpidos, afectando la producción."
+    ],
+    correct: 1
+  },
+  {
+    q: "Una organización exitosa se caracteriza por tener objetivos definidos, jerarquía clara, recursos limitados, procesos internos y cultura organizacional. Cuando el mercado cambia rápidamente, las organizaciones que sobreviven son aquellas que:",
+    options: [
+      "Mantienen rigidamente sus procesos tradicionales porque han funcionado históricamente.",
+      "Se adaptan e innovan constantemente, utilizando la tecnología para responder ágilmente a las nuevas demandas del mercado.",
+      "Eliminan completamente su estructura jerárquica para volverse más flexibles y competitivas.",
+      "Ignoran los cambios del mercado y se enfocan exclusivamente en reducir costos operativos internos."
+    ],
+    correct: 1
+  }
+];
+
+let timeLeft = TOTAL_TIME;
+let timerInterval = null;
+let studentName = "";
+let incidence = "";
+let cheatDetected = false;
+let startTime = null;
+let answers = new Array(10).fill(null);
+
+(function(){
+  const cv=document.getElementById('particles');
+  const ctx=cv.getContext('2d');
+  let W,H,parts=[];
+  function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight}
+  resize();addEventListener('resize',resize);
+  for(let i=0;i<50;i++)parts.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.5+0.3,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,c:['#00f0ff','#ff2ec4','#ffe600','#39ff14'][i%4]});
+  function loop(){
+    ctx.clearRect(0,0,W,H);
+    parts.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>W)p.vx*=-1;
+      if(p.y<0||p.y>H)p.vy*=-1;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=p.c;ctx.globalAlpha=0.5;ctx.fill();
+    });
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+function normalizeName(name) {
+  return name.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "");
+}
+
+function formatTime(seconds) {
+  const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+  const s = (seconds % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+function startQuiz() {
+  const a1 = document.getElementById('apellido1').value.trim();
+  const a2 = document.getElementById('apellido2').value.trim();
+  const n = document.getElementById('nombres').value.trim();
+  const errEl = document.getElementById('start-error');
+
+  if (!a1 || !a2 || !n) {
+    errEl.textContent = "Por favor, completa todos los campos de nombre.";
+    errEl.style.display = "block";
+    return;
+  }
+
+  studentName = `${a1} ${a2}, ${n}`;
+  const normName = normalizeName(studentName);
+  const storageKey = KEY_BASE + normName;
+
+  if (localStorage.getItem(storageKey)) {
+    errEl.textContent = "⚠ Ya has realizado este simulacro. Solo se permite 1 intento.";
+    errEl.style.display = "block";
+    return;
+  }
+
+  errEl.style.display = "none";
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').style.display = "block";
+  
+  startTime = new Date();
+  renderAllQuestions();
+  startTimer();
+  activateAntiCheat();
+}
+
+function renderAllQuestions() {
+  const container = document.getElementById('questions-container');
+  container.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+  
+  questions.forEach((q, qIdx) => {
+    const block = document.createElement('div');
+    block.className = 'q-block';
+    
+    let optionsHTML = '';
+    q.options.forEach((opt, oIdx) => {
+      optionsHTML += `
+        <div class="opt" onclick="selectOption(${qIdx}, ${oIdx}, this)">
+          <div class="opt-letter">${letters[oIdx]}</div>
+          <div class="opt-text">${opt}</div>
+        </div>
+      `;
+    });
+    
+    block.innerHTML = `
+      <div class="q-number">Pregunta ${qIdx + 1} de 10</div>
+      <div class="q-text">${q.q}</div>
+      <div class="options" id="q-opts-${qIdx}">
+        ${optionsHTML}
+      </div>
+    `;
+    container.appendChild(block);
+  });
+}
+
+function selectOption(qIdx, oIdx, element) {
+  answers[qIdx] = oIdx;
+  const container = document.getElementById(`q-opts-${qIdx}`);
+  container.querySelectorAll('.opt').forEach(el => el.classList.remove('selected'));
+  element.classList.add('selected');
+}
+
+function startTimer() {
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      submitQuiz(true);
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const el = document.getElementById('timer');
+  el.textContent = formatTime(timeLeft);
+  el.classList.remove('warn', 'danger');
+  if (timeLeft <= 30) {
+    el.classList.add('danger');
+  } else if (timeLeft <= 120) {
+    el.classList.add('warn');
+  }
+}
+
+function activateAntiCheat() {
+  window.addEventListener('beforeunload', (e) => {
+    e.preventDefault();
+    e.returnValue = '';
+  });
+
+  const handleVisibility = () => {
+    if (document.hidden && !cheatDetected) {
+      cheatDetected = true;
+      incidence = "CAMBIO DE PANTALLA";
+      alert("⚠ Se ha detectado un cambio de pestaña o ventana. El simulacro se enviará automáticamente con incidencia.");
+      submitQuiz(false);
+    }
+  };
+
+  const handleBlur = () => {
+    if (!cheatDetected) {
+      cheatDetected = true;
+      incidence = "CAMBIO DE PANTALLA";
+      alert(" Se ha detectado que saliste de la ventana del simulacro. Se enviará automáticamente con incidencia.");
+      submitQuiz(false);
+    }
+  };
+
+  document.addEventListener('visibilitychange', handleVisibility);
+  window.addEventListener('blur', handleBlur);
+}
+
+function showConfirmModal() {
+  const unanswered = answers.filter(a => a === null).length;
+  let msg = "¿Estás seguro de entregar el simulacro?";
+  if (unanswered > 0) {
+    msg += `\n\nTienes ${unanswered} pregunta(s) sin responder.`;
+  }
+  document.getElementById('modal-message').textContent = msg;
+  document.getElementById('confirm-modal').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('confirm-modal').classList.remove('show');
+}
+
+function confirmAndSubmit() {
+  closeModal();
+  submitQuiz(false);
+}
+
+function submitQuiz(auto) {
+  clearInterval(timerInterval);
+  
+  let score = 0;
+  let detalle = [];
+  questions.forEach((q, i) => {
+    const isOk = answers[i] === q.correct;
+    if (isOk) score++;
+    detalle.push(`P${i+1}${isOk?'OK':'ERROR'}`);
+  });
+
+  const percentage = Math.round((score / 10) * 100);
+  const estado = score >= 6 ? "APROBADO" : "DESAPROBADO";
+  const endTime = new Date();
+  const tiempoEmpleado = Math.floor((endTime - startTime) / 1000);
+  const fechaStr = endTime.toLocaleString('es-PE');
+
+  const storageKey = KEY_BASE + normalizeName(studentName);
+  localStorage.setItem(storageKey, JSON.stringify({
+    score, percentage, estado, fecha: fechaStr
+  }));
+
+  const payload = {
+    _subject: "Simulacro TIN",
+    Curso: CURSO,
+    Sesion: SESSION_TAG,
+    Alumno: studentName,
+    Nota: score,
+    Porcentaje: percentage,
+    Estado: estado,
+    Intento: 1,
+    Tiempo_empleado: tiempoEmpleado,
+    Fecha: fechaStr,
+    Incidencia: incidence || "Ninguna",
+    Detalle: detalle.join(", ")
+  };
+
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(payload)
+  }).catch(() => {});
+
+  showResults(score, percentage, estado, tiempoEmpleado);
+}
+
+function showResults(score, percentage, estado, tiempo) {
+  document.getElementById('quiz-screen').style.display = "none";
+  document.getElementById('result-screen').style.display = "block";
+  window.scrollTo(0, 0);
+  
+  document.getElementById('res-score').textContent = `${score} / 10`;
+  document.getElementById('res-percent').textContent = `${percentage}%`;
+  
+  const statusEl = document.getElementById('res-status');
+  statusEl.textContent = estado;
+  statusEl.className = `status-badge ${estado === 'APROBADO' ? 'aprobado' : 'desaprobado'}`;
+
+  if (incidence) {
+    document.getElementById('res-incidencia').style.display = "block";
+  }
+
+  const mins = Math.floor(tiempo / 60);
+  const secs = tiempo % 60;
+  document.getElementById('res-time').textContent = `${mins}m ${secs}s`;
+
+  const reviewList = document.getElementById('review-list');
+  reviewList.innerHTML = '<h3 style="color:var(--text);margin-bottom:1rem">Revisión de Respuestas</h3>';
+  
+  const letters = ['A', 'B', 'C', 'D'];
+  questions.forEach((q, i) => {
+    const isOk = answers[i] === q.correct;
+    const div = document.createElement('div');
+    div.className = `review-item ${isOk ? 'ok' : 'err'}`;
+    
+    const tuResp = answers[i] !== null ? `${letters[answers[i]]}. ${q.options[answers[i]]}` : "Sin responder";
+    const corrResp = `${letters[q.correct]}. ${q.options[q.correct]}`;
+    
+    div.innerHTML = `
+      <div class="review-q">${isOk ? '✔' : '✘'} Pregunta ${i+1}</div>
+      <div class="review-ans">
+        Tu respuesta: <strong class="${isOk ? 'correct' : 'wrong'}">${tuResp}</strong><br>
+        Correcta: <strong class="correct">${corrResp}</strong>
+      </div>
+    `;
+    reviewList.appendChild(div);
+  });
+}
+
+function sendFeedback() {
+  const email = document.getElementById('feedback-email').value.trim();
+  const msgEl = document.getElementById('feedback-msg');
+  
+  if (!email || !email.includes('@')) {
+    msgEl.textContent = "Por favor, ingresa un correo electrónico válido.";
+    msgEl.style.color = "var(--red)";
+    msgEl.style.display = "block";
+    return;
+  }
+
+  msgEl.textContent = "Enviando feedback...";
+  msgEl.style.color = "var(--cyan)";
+  msgEl.style.display = "block";
+
+  const letters = ['A', 'B', 'C', 'D'];
+
+  const detalleArray = questions.map((q, i) => ({
+    numero: i + 1,
+    pregunta: q.q,
+    tu_respuesta: answers[i] !== null ? `${letters[answers[i]]}. ${q.options[answers[i]]}` : "Sin responder",
+    respuesta_correcta: `${letters[q.correct]}. ${q.options[q.correct]}`
+  }));
+
+  const detalleTexto = detalleArray.map(d => 
+    `PREGUNTA ${d.numero}: ${d.pregunta}\n- Tu respuesta: ${d.tu_respuesta}\n- Respuesta correcta: ${d.respuesta_correcta}`
+  ).join("\n\n-----------------------------------\n\n");
+
+  const payload = {
+    Tipo: "FEEDBACK",
+    Alumno: studentName,
+    Correo: email,
+    Nota: document.getElementById('res-score').textContent,
+    Porcentaje: document.getElementById('res-percent').textContent,
+    Estado: document.getElementById('res-status').textContent,
+    DetallePreguntas: detalleTexto,
+    DetalleJSON: JSON.stringify(detalleArray)
+  };
+
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(payload)
+  }).then(() => {
+    msgEl.textContent = "✅ Feedback enviado correctamente a tu correo.";
+    msgEl.style.color = "var(--green)";
+  }).catch((err) => {
+    console.error(err);
+    msgEl.textContent = "⚠ Error de conexión al enviar. Intenta nuevamente.";
+    msgEl.style.color = "var(--red)";
+  });
+}
+</script>
+</body>
+</html>
