@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evaluación — Tecnología de la Información para los Negocios (UCSUR)</title>
+<style>
+:root{--bg:#040a14;--cyan:#00b4ff;--magenta:#ff2ec4;--yellow:#ffe600;--green:#39ff14;--orange:#ff9500;--ucsur:#0057a8;--ucsur-light:#00a0e9;--card:rgba(255,255,255,.05);--border:rgba(0,180,255,.25)}
+*{margin:0;padding:0;box-sizing:border-box}body{background:var(--bg);color:#eaf6ff;font-family:'Segoe UI',system-ui,Arial,sans-serif;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;background:radial-gradient(1100px 600px at 82% -10%,rgba(0,180,255,.14),transparent 60%),radial-gradient(900px 520px at 8% 110%,rgba(0,87,168,.16),transparent 60%)}
+header{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;padding:10px 16px;background:rgba(5,10,20,.95);border-bottom:1px solid var(--border)}
+#logoWrap{background:#fff;border-radius:10px;padding:3px 10px;display:flex;align-items:center}#logoWrap img{height:40px;display:block}
+#logoFallback{display:none;background:#fff;border-radius:10px;padding:6px 14px;font-weight:900;color:var(--ucsur);font-size:18px;letter-spacing:1px}
+.brand{font-weight:800;font-size:14px;background:linear-gradient(90deg,var(--ucsur-light),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.chip{padding:4px 10px;border-radius:20px;border:1px solid var(--border);color:var(--cyan);font-size:11px;font-weight:600}
+.chip.doc{border-color:rgba(255,46,196,.45);color:var(--magenta)}
+main{position:relative;z-index:10;max-width:880px;margin:26px auto 60px;padding:0 18px}
+h2.sec{font-size:26px;font-weight:900;background:linear-gradient(90deg,var(--ucsur-light),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px;backdrop-filter:blur(6px)}
+.btn{cursor:pointer;border:1px solid var(--ucsur-light);color:var(--ucsur-light);background:rgba(0,160,233,.08);padding:10px 22px;border-radius:10px;font-size:15px;font-weight:700;text-transform:uppercase;transition:.25s}
+.btn:hover{background:rgba(0,160,233,.22);box-shadow:0 0 18px rgba(0,160,233,.45)}
+.btn:disabled{opacity:.35;cursor:not-allowed;box-shadow:none}
+.btn.gr{border-color:var(--green);color:var(--green);background:rgba(57,255,20,.07)}
+.btn.yl{border-color:var(--yellow);color:var(--yellow);background:rgba(255,230,0,.07)}
+.btn.sm{padding:6px 14px;font-size:12px}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+input.txt{padding:11px 14px;border-radius:10px;border:1px solid var(--border);background:rgba(0,0,0,.5);color:#fff;font-size:14px;outline:none;width:100%}
+#timerDisplay{font-size:36px;font-weight:900;color:var(--green)}
+#timerDisplay.warn{color:var(--orange)}#timerDisplay.danger{color:#ff3355}
+.qbox{border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:14px 16px;margin-bottom:10px;background:rgba(255,255,255,.03)}
+.qbox .qt{font-weight:700;margin-bottom:10px;font-size:14.5px}
+.qopt{display:block;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:13.5px;color:#cfeef8;border:1px solid transparent;margin-bottom:5px;transition:.2s}
+.qopt:hover{background:rgba(0,180,255,.08);border-color:rgba(0,180,255,.25)}
+.qopt input{margin-right:8px;accent-color:var(--ucsur-light)}
+.neon-g{color:var(--green)}.neon-m{color:var(--magenta)}.neon-y{color:var(--yellow)}.neon-c{color:var(--cyan)}
+.warning{border:2px dashed var(--magenta);background:rgba(255,46,196,.08);border-radius:12px;padding:12px;font-size:13px;color:#ffc0e5;margin-top:10px}
+</style>
+</head>
+<body>
+<header>
+ <div id="logoWrap"><img src="UCSUR_logo.png" alt="UCSUR" onerror="this.style.display='none';document.getElementById('logoFallback').style.display='block';"></div>
+ <div id="logoFallback">UCSUR</div>
+ <div class="brand">💻 EVALUACIÓN · TI PARA LOS NEGOCIOS</div>
+ <div style="margin-left:auto;display:flex;gap:6px"><span class="chip">10 preguntas · 1 a la vez</span><span class="chip">1 intento · 15 min</span><span class="chip doc">👷 Eduardo Olivos</span></div>
+</header>
+<main>
+ <h2 class="sec">📝 Evaluación — Tecnología de la Información para los Negocios</h2>
+ <div id="quizIntro" class="card">
+  <label style="font-size:12px;color:#8fb8c6;font-weight:700">APELLIDOS Y NOMBRES (en este orden)</label>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:8px 0 12px">
+   <input class="txt" id="apPaterno" placeholder="1er Apellido"><input class="txt" id="apMaterno" placeholder="2do Apellido"><input class="txt" id="nombres" placeholder="Nombres">
+  </div>
+  <p id="attemptInfo" style="font-size:13px;margin-bottom:10px"></p>
+  <ul style="font-size:13px;line-height:1.9;padding-left:18px;color:#cfeef8">
+   <li>📖 10 preguntas de análisis sobre IA, datos, cloud, IoT, BI, Blockchain y gobierno de TI.</li>
+   <li>📄 Las preguntas se muestran <b>una por una</b> y <b>no se puede retroceder</b>.</li>
+   <li>🕑 Tiempo límite: <b class="neon-y">15:00</b>. 🔒 1 intento por alumno.</li>
+   <li>📊 Tu resultado se registra automáticamente en la hoja del curso.</li>
+   <li>📩 Al final puedes recibir el Feedback en tu correo.</li>
+  </ul>
+  <div class="warning">⚠ <b>AVISO DE INTEGRIDAD ACADÉMICA:</b> cualquier incidencia (cambiar de pestaña o ventana, copiar/cortar, clic derecho o atajos de teclado) <b>finaliza la evaluación de inmediato</b> y queda registrada junto con tu nota.</div>
+  <div class="btnrow"><button class="btn" id="btnStartQuiz" onclick="startQuiz()">🚀 Iniciar</button></div>
+  <div id="quizMsg" style="color:#ff8899;font-size:13px;font-weight:700"></div>
+ </div>
+ <div id="quizArea" style="display:none">
+  <div class="card" style="display:flex;align-items:center;gap:16px"><div id="timerDisplay">15:00</div><div><b id="quizStudent"></b><div id="progLbl" style="font-size:12px;color:#8fb8c6;margin-top:4px"></div></div></div>
+  <div id="questionBox"></div>
+  <div class="btnrow"><button class="btn gr" id="btnNext" onclick="nextQ()" disabled>➤ Siguiente</button></div>
+  <div style="font-size:11px;color:#8fb8c6"> Una vez que avances a la siguiente pregunta no podrás retroceder.</div>
+ </div>
+ <div id="quizResult" style="display:none"></div>
+</main>
+<script>
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbw92gRxVDJ-gunQgDs-xre1RjUFhcyRP0Y2VR3qJEe05qjwb0jffwNWuUU4EKXk-wZo/exec';
+const MAX=1,TLIM=900,CURSO='Tecnología de la Información para los Negocios',SESION='Evaluación - TI Negocios',KEY='ucsur_ti_v3';
+const Q=[
+{q:'Una organización desea utilizar inteligencia artificial para segmentar clientes y personalizar promociones. Sin embargo, observa que los resultados son inconsistentes debido a registros duplicados y datos incompletos. ¿Cuál debería ser la prioridad antes de ampliar el uso de IA?',o:['Mejorar la calidad y gobernanza de los datos.','Migrar toda la infraestructura a la nube pública.','Incrementar la capacidad de procesamiento de los servidores.','Contratar más especialistas en marketing digital.'],c:0},
+{q:'Tras una interrupción del servicio ocasionada por un proveedor cloud, la gerencia solicita identificar quién debe explicar las razones del incidente y las acciones correctivas aplicadas. ¿A qué concepto corresponde principalmente esta obligación?',o:['Propiedad intelectual.','Responsabilidad legal.','Auditoría informática.','Rendición de cuentas.'],c:3},
+{q:'Una empresa exportadora almacena sus aplicaciones en servidores locales que alcanzan su límite de capacidad durante campañas de alta demanda. ¿Cuál es la principal ventaja de migrar parte de sus operaciones a la nube?',o:['Reduce la necesidad de soporte técnico.','Mejora la escalabilidad de los recursos tecnológicos.','Elimina los riesgos de seguridad.','Garantiza automáticamente el cumplimiento legal.'],c:1},
+{q:'¿Cuál de las siguientes situaciones representa mejor un ejemplo de responsabilidad legal en un entorno digital?',o:['Un gerente aprueba un presupuesto tecnológico.','El proveedor documenta una actualización del sistema.','La empresa asume sanciones por incumplir normas de protección de datos.','El analista de TI explica las causas de una falla.'],c:2},
+{q:'Una empresa busca rastrear en tiempo real la ubicación y condiciones de temperatura de contenedores que transportan productos agrícolas. ¿Qué tecnología tendría mayor impacto para este objetivo?',o:['Blockchain.','Business Intelligence.','CRM Analítico.','Internet de las Cosas (IoT).'],c:3},
+{q:'¿Cuál es el principal beneficio de utilizar Business Intelligence sobre grandes volúmenes de información empresarial?',o:['Transformar datos en información útil para la toma de decisiones.','Automatizar las decisiones empresariales.','Reducir la necesidad de bases de datos.','Eliminar todos los errores operativos.'],c:0},
+{q:'La alta dirección recibe reportes con información correcta y completa, pero estos se elaboran dos semanas después de ocurridas las operaciones. ¿Cuál es el principal problema de calidad de información?',o:['Seguridad de la información.','Integridad de la información.','Oportunidad de la información.','Consistencia de la información.'],c:2},
+{q:'Una empresa exportadora maneja información financiera y contractual altamente sensible, pero también experimenta incrementos temporales de demanda durante campañas internacionales que requieren mayor capacidad de procesamiento. ¿Qué estrategia de infraestructura sería más adecuada para equilibrar seguridad, flexibilidad y costo?',o:['Migrar todos los sistemas y bases de datos a una nube pública para reducir costos de infraestructura.','Implementar una arquitectura híbrida, manteniendo los sistemas críticos localmente y utilizando la nube para cargas de trabajo variables.','Mantener todas las aplicaciones y datos en servidores locales para maximizar el control de la información.','Reemplazar la infraestructura actual por estaciones de trabajo de mayor capacidad para cada usuario.'],c:1},
+{q:'Un gerente de exportaciones desea monitorear el desempeño internacional de la empresa mediante un dashboard ejecutivo. ¿Cuál de los siguientes KPI aportaría mayor valor para evaluar la eficiencia del proceso de exportación y el nivel de servicio al cliente?',o:['Número de computadoras conectadas a la red corporativa.','Cantidad total de correos electrónicos enviados por semana.','Porcentaje de utilización de impresoras por área.','Tiempo promedio de entrega de pedidos internacionales.'],c:3},
+{q:'Una empresa decide implementar Blockchain e Inteligencia Artificial porque varias empresas del sector lo están haciendo. Sin embargo, no ha evaluado sus procesos, necesidades ni objetivos estratégicos. ¿Cuál es el principal riesgo de esta decisión?',o:['Incrementar los costos y la complejidad operativa sin obtener beneficios proporcionales.','Reducir el tiempo necesario para implementar nuevos procesos.','Aumentar la dependencia de información para la toma de decisiones.','Mejorar excesivamente la capacidad analítica de la organización.'],c:0}];
+let act=false,tLeft=TLIM,tInt=null,rev=[],score=0,incFlag=0,idx=0,answers=[];
+const $=id=>document.getElementById(id);
+function fullName(){const p=$('apPaterno').value.trim(),m=$('apMaterno').value.trim(),n=$('nombres').value.trim();return((p+' '+m).trim()+(n?', '+n:''));}
+function okName(){return $('apPaterno').value.trim().length>=2&&$('nombres').value.trim().length>=2;}
+function nKey(){return fullName().toLowerCase().replace(/[^a-z0-9ñ]+/gi,'_');}
+function gAtt(){try{return parseInt(localStorage.getItem(KEY+'_a_'+nKey())||'0')||0}catch(e){return 0}}
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function updateAttemptInfo(){
+ const btn=$('btnStartQuiz');
+ if(!okName()){$('attemptInfo').innerHTML='🔢 El intento se controla por alumno: completa <b>1er apellido</b> y <b>nombres</b>.';btn.disabled=false;$('quizMsg').textContent='';return;}
+ const used=gAtt(),left=MAX-used;
+ $('attemptInfo').innerHTML='🔢 Intentos registrados: '+used+'/'+MAX+' · Disponibles: <b style="color:var(--cyan)">'+left+'</b>';
+ if(left<=0){btn.disabled=true;$('quizMsg').textContent='🔒 Ya se registró un intento para este alumno; no dispone de intentos adicionales.';}
+ else{btn.disabled=false;$('quizMsg').textContent='';}
+}
+['apPaterno','apMaterno','nombres'].forEach(id=>$(id).addEventListener('input',updateAttemptInfo));
+updateAttemptInfo();
+function startQuiz(){
+ if(!okName()){$('quizMsg').textContent='⚠ Escribe tu 1er apellido y tus nombres.';return;}
+ if(gAtt()>=MAX){$('quizMsg').textContent='🔒 Ya se registró un intento para este alumno; no dispone de intentos adicionales.';return;}
+ act=true;tLeft=TLIM;idx=0;answers=new Array(Q.length).fill(-1);incFlag=0;
+ $('quizIntro').style.display='none';$('quizResult').style.display='none';$('quizArea').style.display='block';
+ $('quizStudent').textContent='Alumno(a): '+fullName();
+ renderQ();
+ $('timerDisplay').textContent=fmt(TLIM);
+ tInt=setInterval(()=>{tLeft--;$('timerDisplay').textContent=fmt(tLeft);$('timerDisplay').className=tLeft<=60?'danger':(tLeft<=180?'warn':'');if(tLeft<=0){clearInterval(tInt);submitQuiz(true,'TIEMPO AGOTADO');}},1000);
+}
+function renderQ(){
+ const q=Q[idx];
+ $('progLbl').textContent='Pregunta '+(idx+1)+' de '+Q.length+' · Sin retroceso';
+ $('questionBox').innerHTML='<div class="qbox"><div class="qt">'+(idx+1)+'. '+q.q+'</div>'+q.o.map((o,j)=>'<label class="qopt"><input type="radio" name="qcur" value="'+j+'" onchange="document.getElementById(\'btnNext\').disabled=false">'+String.fromCharCode(65+j)+') '+o+'</label>').join('')+'</div>';
+ const btn=$('btnNext');btn.disabled=true;btn.textContent=(idx===Q.length-1)?'✔ Entregar':'➤ Siguiente';
+}
+function nextQ(){
+ const s=document.querySelector('input[name="qcur"]:checked');
+ answers[idx]=s?+s.value:-1;
+ if(idx===Q.length-1){submitQuiz(false);}else{idx++;renderQ();}
+}
+function incident(reason){if(!act)return;incFlag=1;submitQuiz(true,reason);}
+document.addEventListener('visibilitychange',()=>{if(act&&document.hidden)incident('CAMBIO DE PANTALLA');});
+window.addEventListener('blur',()=>{if(act)incident('CAMBIO DE PESTAÑA / VENTANA');});
+document.addEventListener('copy',e=>{if(act){e.preventDefault();incident('INTENTO DE COPIADO');}});
+document.addEventListener('cut',e=>{if(act){e.preventDefault();incident('INTENTO DE CORTE');}});
+document.addEventListener('contextmenu',e=>{if(act){e.preventDefault();incident('MENÚ CONTEXTUAL');}});
+document.addEventListener('keydown',e=>{if(act&&((e.ctrlKey&&['c','x','a','p','s','u'].includes(e.key.toLowerCase()))||(e.key==='F12')||(e.ctrlKey&&e.shiftKey&&['I','J','C'].includes(e.key)))){e.preventDefault();incident('ATAJO DE TECLADO');}});
+function submitQuiz(auto,reason){if(!act&&auto===false)return;act=false;clearInterval(tInt);
+ score=0;rev=[];
+ Q.forEach((q,i)=>{const v=answers[i]!==undefined?answers[i]:-1;const ok=v===q.c;if(ok)score++;rev.push({i:i+1,q:q.q,ok,sel:v>=0?q.o[v]:'— Sin respuesta —',ans:q.o[q.c]});});
+ try{localStorage.setItem(KEY+'_a_'+nKey(),'1')}catch(e){}
+ const name=fullName(),pct=Math.round(score/Q.length*100),ap=score>=6,used=TLIM-Math.max(tLeft,0),fecha=new Date().toLocaleString('es-PE');
+ const inc=auto?(reason||'TIEMPO AGOTADO'):'ENTREGA NORMAL';
+ const payload={_subject:'Evaluación TI Negocios UCSUR — '+name,Curso:CURSO,Sesion:SESION,Alumno:name,Nota:score,Porcentaje:pct+'%',Estado:ap?'APROBADO':'DESAPROBADO',Intento:'1 de 1',Tiempo_empleado:fmt(used)+' de 15:00',Fecha:fecha,Incidencia:inc,Incidencias_numero:incFlag,Detalle:rev.map(r=>'P'+r.i+(r.ok?'OK':'ERROR')).join(' ')};
+ fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)}).catch(()=>{});
+ $('quizArea').style.display='none';
+ let h='<div class="card"><h3 class="'+(ap?'neon-g':'neon-m')+'" style="font-size:22px">'+(ap?'✅':'❌')+' Finalizada'+(inc!=='ENTREGA NORMAL'?' 🚫 '+inc:'')+'</h3><p><b>Alumno(a):</b> '+name+'</p><div style="font-size:44px;font-weight:900;color:'+(ap?'var(--green)':'var(--magenta)')+'">'+score+' / '+Q.length+'</div><p class="'+(ap?'neon-g':'neon-m')+'" style="font-weight:800">'+pct+'% — '+(ap?'APROBADO':'DESAPROBADO')+'</p><p style="font-size:12px;color:#8fb8c6">📨 Registrado en la hoja del curso. 🔒 Intento consumido.</p>'+
+ '<div style="margin-top:12px;border-top:1px dashed rgba(255,255,255,.2);padding-top:12px"><b class="neon-y">📩 Feedback a tu correo</b><p style="font-size:12px;margin:6px 0">Recibe tu calificación y cada pregunta con tu respuesta y la correcta.</p><input class="txt" id="fbEmail" type="email" placeholder="tucorreo@ejemplo.com" style="max-width:380px"><div class="btnrow"><button class="btn yl sm" onclick="sendFb()">📩 Enviar</button></div><div id="fbStatus" style="font-size:12px"></div></div>'+
+ '<b class="neon-y">🔎 Revisión</b>';
+ rev.forEach(r=>{h+='<div style="border-left:4px solid '+(r.ok?'var(--green)':'#ff3355')+';background:rgba(255,255,255,.03);padding:8px 12px;border-radius:0 8px 8px 0;margin:8px 0;font-size:12.5px"><b>'+(r.ok?'✔':'✘')+' P'+r.i+'</b> '+r.q+'<br><span style="color:#8fb8c6">Tu respuesta: </span>'+r.sel+(r.ok?'':'<br><span style="color:var(--green)">Correcta: </span>'+r.ans)+'</div>';});
+ h+='</div>';
+ const r=$('quizResult');r.innerHTML=h;r.style.display='block';window.scrollTo(0,0);updateAttemptInfo();}
+function sendFb(){const em=$('fbEmail').value.trim();
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){$('fbStatus').innerHTML='<span style="color:#ff8899">⚠ Correo inválido.</span>';return;}
+ const name=fullName();
+ let fb='FEEDBACK '+SESION+'\nAlumno(a): '+name+'\nNota: '+score+'/'+Q.length+'\n\n';
+ rev.forEach(r=>{fb+=(r.ok?'✔':'✘')+' P'+r.i+' '+r.q+'\nTu respuesta: '+r.sel+'\nCorrecta: '+r.ans+'\n\n';});
+ fb+='Saludos,\nEduardo Olivos';
+ fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({Tipo:'FEEDBACK',Correo_alumno:em,_subject:'Feedback TI Negocios UCSUR — '+name,Feedback:fb,Curso:CURSO,Sesion:SESION,Alumno:name})}).catch(()=>{});
+ $('fbStatus').innerHTML='<span class="neon-g">✅ Feedback enviado a '+em+'.</span>';}
+</script>
+</body>
+</html>
